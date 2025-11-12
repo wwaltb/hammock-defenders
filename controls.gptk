@@ -1,3 +1,6 @@
+start = p
+select = o
+
 a = x
 b = z
 x = c
@@ -8,10 +11,17 @@ down = s
 left = a
 right = d
 
+l2 = y
 left_analog_up = w
 left_analog_down = s
 left_analog_left = a
 left_analog_right = d
+
+r2 = y
+right_analog_up = w
+right_analog_down = s
+right_analog_left = a
+right_analog_right = d
 
 deadzone_mode = scaled_radial
 deadzone = 2000

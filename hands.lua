@@ -8,7 +8,7 @@ function Hands.load()
 	Hands.center = { 56, 72 }
 	Hands.x = Hands.center[1] + 0.01
 	Hands.y = Hands.center[2]
-	Hands.speed = 8 * 6
+	Hands.speed = 9 * 6
 	Hands.distance = 0
 	Hands.maxDistance = 20
 
@@ -60,22 +60,37 @@ function Hands.update(dt)
 
 	-- check and calculate movement (need to address diagonal speed bug)
 	Hands.idle = true
+	local dir = { x = 0, y = 0 }
 	if love.keyboard.isDown("w") then
-		Hands.y = Hands.y - Hands.speed * dt
+		dir.y = dir.y - 1
 		Hands.idle = false
 	end
 	if love.keyboard.isDown("a") then
-		Hands.x = Hands.x - Hands.speed * dt
+		dir.x = dir.x - 1
 		Hands.idle = false
 	end
 	if love.keyboard.isDown("s") then
-		Hands.y = Hands.y + Hands.speed * dt
+		dir.y = dir.y + 1
 		Hands.idle = false
 	end
 	if love.keyboard.isDown("d") then
-		Hands.x = Hands.x + Hands.speed * dt
+		dir.x = dir.x + 1
 		Hands.idle = false
 	end
+
+	local mag = math.sqrt(dir.x * dir.x + dir.y * dir.y)
+	if mag > 1 then
+		dir.x = dir.x / mag
+		dir.y = dir.y / mag
+	end
+
+	local dx = Hands.center[1] - Hands.x
+	local dy = Hands.center[2] - Hands.y
+	local dist = math.sqrt(dx * dx + dy * dy)
+	local distFactor = math.max(1, (Hands.maxDistance - dist) * 0.08)
+
+	Hands.x = Hands.x + dir.x * Hands.speed * dt / distFactor
+	Hands.y = Hands.y + dir.y * Hands.speed * dt / distFactor
 
 	-- calculate the crosshairs offset and distance from its center
 	local xOffset = Hands.center[1] - Hands.x
@@ -122,9 +137,14 @@ function Hands.drawHandsAndArms(handIdxOffset)
 	end
 end
 
-function Hands.drawJustTopsOfHands(handIdxOffset)
+function Hands.drawJustTopsOfHands()
 	if Hands.idle and Hands.distance < Hands.maxDistance / 4 then
 		return
+	end
+
+	local handIdxOffset = 0
+	if Hands.clapping then
+		handIdxOffset = 1
 	end
 
 	local handIdx

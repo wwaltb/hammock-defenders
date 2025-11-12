@@ -14,6 +14,7 @@
     pkgs.aseprite
     pkgs.love
     pkgs.gnumake
+    pkgs.zip
   ];
 
   # https://devenv.sh/languages/
@@ -26,14 +27,15 @@
   # services.postgres.enable = true;
 
   # https://devenv.sh/scripts/
-  scripts.hello.exec = ''
-    echo hello from $GREET
+  scripts.package.exec = ''
+    mkdir Hammock\ Defenders
+    cp -r *.lua lib/ art/ bin/ controls.gptk mux_launch.sh ./Hammock\ Defenders/
+    zip -r happy-3-years.muxapp Hammock\ Defenders/
+    rm -rf Hammock\ Defenders
   '';
 
   # https://devenv.sh/basics/
   enterShell = ''
-    hello         # Run scripts directly
-    git --version # Use packages
   '';
 
   # https://devenv.sh/tasks/
