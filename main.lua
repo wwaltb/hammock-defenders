@@ -6,6 +6,7 @@ local state = "title"
 local score = 0
 
 function love.load()
+	require("lib.slam")
 	Object = require("lib.classic")
 
 	math.randomseed(os.time())
@@ -34,6 +35,10 @@ function love.load()
 
 	titleText = love.graphics.newImage("art/titleText.png")
 	gameOverText = love.graphics.newImage("art/gameOverText.png")
+
+	clapSound = love.audio.newSource("sfx/clap.wav", "stream")
+	bugClapSound = love.audio.newSource("sfx/bugClap.wav", "stream")
+	waltHitSound = love.audio.newSource("sfx/waltHit.wav", "stream")
 end
 
 function love.update(dt)
@@ -66,6 +71,7 @@ function love.update(dt)
 				zzzs:minusOne()
 				table.insert(hitmarkers, HitMarker(moth.x, moth.y))
 				moth.hasHitWalt = true
+				love.audio.play(waltHitSound)
 			end
 		end
 
@@ -96,13 +102,22 @@ function love.keypressed(key)
 		local clap = key == "x" or key == "z" or key == "y" or key == "u"
 		if clap and not Hands.clapping then
 			Hands.clapping = true
+
+			local bugsHit = 0
 			for index, moth in ipairs(s.moths) do
 				local dx = math.abs(Hands.x - moth.x)
 				local dy = math.abs(Hands.y - moth.y)
 				if dx < 3.5 and dy < 3.5 then
 					table.remove(s.moths, index)
 					score = score + 10
+					bugsHit = bugsHit + 1
 				end
+			end
+
+			if bugsHit == 0 then
+				love.audio.play(clapSound)
+			else
+				love.audio.play(bugClapSound)
 			end
 		end
 	else
@@ -113,6 +128,8 @@ function love.keypressed(key)
 		local clap = key == "x" or key == "z" or key == "y" or key == "u"
 		if clap and not Hands.clapping then
 			Hands.clapping = true
+			love.audio.play(clapSound)
+
 			for index, moth in ipairs(s.moths) do
 				local dx = math.abs(Hands.x - moth.x)
 				local dy = math.abs(Hands.y - moth.y)
@@ -176,11 +193,11 @@ function love.draw()
 		love.graphics.setFont(numbers)
 		love.graphics.printf(score, 4 * 6, 16 * 6, 30, "left", 0, 6, 6)
 
+		Hands.draw()
+
 		for _, hitmarker in ipairs(hitmarkers) do
 			hitmarker:draw()
 		end
-
-		Hands.draw()
 
 		love.graphics.draw(gameOverText, 0, 0, 0, intScale, intScale)
 
@@ -191,7 +208,12 @@ function love.draw()
 		Hands.drawJustTopsOfHands()
 	elseif state == "title" then
 		love.graphics.draw(scene, 0, 0, 0, intScale, intScale)
-		love.graphics.draw(anaRight, 0, 0, 0, intScale, intScale)
+
+		if Hands.x < Hands.center[1] then
+			love.graphics.draw(anaLeft, 0, 0, 0, intScale, intScale)
+		else
+			love.graphics.draw(anaRight, 0, 0, 0, intScale, intScale)
+		end
 
 		Hands.draw()
 
@@ -203,7 +225,7 @@ end
 
 function initGame()
 	score = 0
-	Hands.load()
+	-- Hands.load()
 	hitmarkers = {}
 	zzzs = Zzzs()
 	s = Spawner()

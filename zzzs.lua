@@ -3,7 +3,7 @@ Zzzs = Object.extend(Object)
 function Zzzs.new(self)
 	self.zsLeft = 6
 
-	self.x, self.y = 88, 3
+	self.x, self.y = 88, 1
 
 	self.outline = love.graphics.newImage("art/zzzsOutline.png")
 
