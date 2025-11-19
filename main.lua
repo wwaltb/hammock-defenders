@@ -31,7 +31,7 @@ function love.load()
 	s = Spawner()
 
 	scoreText = love.graphics.newImage("art/scoreText.png")
-	numbers = love.graphics.newImageFont("art/numbers.png", "1234567890", 2)
+	numbers = love.graphics.newImageFont("art/numbers.png", "1234567890", 1)
 
 	titleText = love.graphics.newImage("art/titleText.png")
 	gameOverText = love.graphics.newImage("art/gameOverText.png")

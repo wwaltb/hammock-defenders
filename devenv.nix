@@ -29,8 +29,8 @@
   # https://devenv.sh/scripts/
   scripts.package.exec = ''
     mkdir Hammock\ Defenders
-    cp -r *.lua lib/ art/ bin/ controls.gptk mux_launch.sh ./Hammock\ Defenders/
-    zip -r happy-3-years.muxapp Hammock\ Defenders/
+    cp -r *.lua lib/ art/ sfx/ build/bin/ build/controls.gptk build/mux_launch.sh ./Hammock\ Defenders/
+    zip -r hammock-defenders.muxapp Hammock\ Defenders/
     rm -rf Hammock\ Defenders
   '';
 
