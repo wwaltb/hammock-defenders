@@ -36,9 +36,10 @@ function love.load()
 	titleText = love.graphics.newImage("art/titleText.png")
 	gameOverText = love.graphics.newImage("art/gameOverText.png")
 
-	clapSound = love.audio.newSource("sfx/clap.wav", "stream")
-	bugClapSound = love.audio.newSource("sfx/bugClap.wav", "stream")
-	waltHitSound = love.audio.newSource("sfx/waltHit.wav", "stream")
+	clapSound = love.audio.newSource({ "sfx/clap1.wav", "sfx/clap2.wav" }, "stream")
+	bugMushSound = love.audio.newSource({ "sfx/mush1.wav", "sfx/mush2.wav" }, "stream")
+	hitSoundLow = love.audio.newSource("sfx/hit2.wav", "stream")
+	hitSoundHigh = love.audio.newSource("sfx/hit1.wav", "stream")
 end
 
 function love.update(dt)
@@ -71,7 +72,11 @@ function love.update(dt)
 				zzzs:minusOne()
 				table.insert(hitmarkers, HitMarker(moth.x, moth.y))
 				moth.hasHitWalt = true
-				love.audio.play(waltHitSound)
+				if zzzs.zsLeft <= 0 then
+					hitSoundLow:play()
+				else
+					hitSoundHigh:play()
+				end
 			end
 		end
 
@@ -114,10 +119,11 @@ function love.keypressed(key)
 				end
 			end
 
-			if bugsHit == 0 then
-				love.audio.play(clapSound)
-			else
-				love.audio.play(bugClapSound)
+			love.audio.play(clapSound)
+			if bugsHit == 1 then
+				love.audio.play(bugMushSound)
+			elseif bugsHit > 1 then
+				love.audio.play(bugMushSound)
 			end
 		end
 	else
@@ -128,14 +134,22 @@ function love.keypressed(key)
 		local clap = key == "x" or key == "z" or key == "y" or key == "u"
 		if clap and not Hands.clapping then
 			Hands.clapping = true
-			love.audio.play(clapSound)
 
+			local bugsHit = 0
 			for index, moth in ipairs(s.moths) do
 				local dx = math.abs(Hands.x - moth.x)
 				local dy = math.abs(Hands.y - moth.y)
 				if dx < 3.5 and dy < 3.5 then
 					table.remove(s.moths, index)
+					bugsHit = bugsHit + 1
 				end
+			end
+
+			love.audio.play(clapSound)
+			if bugsHit == 1 then
+				love.audio.play(bugMushSound)
+			elseif bugsHit > 1 then
+				love.audio.play(bugMushSound)
 			end
 		end
 	end
