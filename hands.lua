@@ -5,7 +5,7 @@ function Hands.load()
 	Hands.idle = true
 	Hands.timer = 0.
 
-	Hands.center = { 56, 72 }
+	Hands.center = { 58, 71 }
 	Hands.x = Hands.center[1] + 0.01
 	Hands.y = Hands.center[2]
 	Hands.speed = 9 * 6

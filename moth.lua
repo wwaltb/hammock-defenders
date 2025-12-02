@@ -4,7 +4,7 @@ function Moth.new(self)
 	self.x, self.y = 0, 0
 	self.radius = 40 + math.random() * 10
 	self.angle = math.random() * math.pi
-	self.target = { x = 57, y = 79 }
+	self.target = { x = 60, y = 79 }
 
 	-- Base orbit parameters
 	self.minOrbit = 6 + math.random() * 8
