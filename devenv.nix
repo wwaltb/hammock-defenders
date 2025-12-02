@@ -28,6 +28,8 @@
 
   # https://devenv.sh/scripts/
   scripts.package.exec = ''
+    zip -r hammock-defenders.love *.lua lib/ art/ sfx/
+
     mkdir Hammock\ Defenders
     cp -r *.lua lib/ art/ sfx/ build/bin/ build/controls.gptk build/mux_launch.sh ./Hammock\ Defenders/
     zip -r hammock-defenders.muxapp Hammock\ Defenders/
